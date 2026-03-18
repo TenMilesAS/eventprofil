@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)file:///C:/Users/Lenovo/Downloads/eventprofil-portal_1.html -->
+<html lang="no"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eventprofil – Forhandlerportal</title>
+<link href="./Eventprofil – Forhandlerportal_files/css2" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1f3d;
+    --navy-mid: #1a2f54;
+    --accent: #e8b84b;
+    --accent-dark: #c99c30;
+    --light: #f5f6f8;
+    --white: #ffffff;
+    --text: #2c3448;
+    --text-light: #6b7280;
+    --border: #e2e6ed;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --card-shadow: 0 2px 16px rgba(15,31,61,0.09);
+    --radius: 12px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--light); color: var(--text); min-height: 100vh; }
+
+  /* ─── LOGIN ─── */
+  #login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, #263f70 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  #login-screen::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,184,75,0.12) 0%, transparent 70%);
+    top: -150px; right: -150px;
+  }
+  #login-screen::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,184,75,0.08) 0%, transparent 70%);
+    bottom: -100px; left: -100px;
+  }
+  .login-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 48px 44px;
+    width: 420px;
+    max-width: 94vw;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.35);
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(24px); } to { opacity:1; transform: translateY(0); } }
+  .login-logo { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+  .login-logo-mark {
+    width: 44px; height: 44px;
+    background: var(--navy);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    color: var(--accent);
+    font-size: 20px; font-weight: 700;
+  }
+  .login-logo-text { font-size: 20px; font-weight: 700; color: var(--navy); letter-spacing: -0.3px; }
+  .login-logo-text span { color: var(--accent-dark); }
+  .login-title { font-size: 26px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .login-sub { font-size: 14px; color: var(--text-light); margin-bottom: 28px; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; letter-spacing: 0.3px; }
+  .form-group input {
+    width: 100%; padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 15px; font-family: inherit;
+    outline: none; transition: border 0.2s;
+    color: var(--text);
+  }
+  .form-group input:focus { border-color: var(--navy); }
+  .login-hint { font-size: 12px; color: var(--text-light); margin-top: 6px; }
+  .btn-login {
+    width: 100%; padding: 14px;
+    background: var(--navy);
+    color: var(--white);
+    border: none; border-radius: 8px;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: background 0.2s, transform 0.1s;
+    margin-top: 6px;
+    font-family: inherit;
+  }
+  .btn-login:hover { background: var(--navy-mid); transform: translateY(-1px); }
+  .login-error { color: var(--danger); font-size: 13px; margin-top: 10px; display: none; }
+
+  /* ─── APP SHELL ─── */
+  #app { display: none; min-height: 100vh; }
+
+  /* ─── TOPBAR ─── */
+  .topbar {
+    background: var(--navy);
+    color: var(--white);
+    padding: 0 32px;
+    height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  }
+  .topbar-left { display: flex; align-items: center; gap: 14px; }
+  .topbar-logo-mark {
+    width: 36px; height: 36px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    color: var(--navy);
+    font-size: 16px; font-weight: 700;
+  }
+  .topbar-name { font-size: 17px; font-weight: 700; letter-spacing: -0.2px; }
+  .topbar-badge { font-size: 11px; background: rgba(255,255,255,0.12); padding: 2px 8px; border-radius: 20px; color: rgba(255,255,255,0.7); }
+  .topbar-right { display: flex; align-items: center; gap: 16px; }
+  .topbar-user { font-size: 13px; color: rgba(255,255,255,0.7); }
+  .btn-logout {
+    padding: 7px 16px;
+    border: 1.5px solid rgba(255,255,255,0.25);
+    border-radius: 7px;
+    background: transparent; color: white;
+    font-size: 13px; cursor: pointer; font-family: inherit;
+    transition: border 0.2s, background 0.2s;
+  }
+  .btn-logout:hover { border-color: white; background: rgba(255,255,255,0.08); }
+
+  /* ─── NAVIGATION TABS ─── */
+  .nav-tabs {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex; gap: 4px;
+  }
+  .nav-tab {
+    padding: 16px 20px;
+    font-size: 14px; font-weight: 500;
+    color: var(--text-light);
+    cursor: pointer; border: none;
+    background: transparent;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    transition: color 0.2s, border-color 0.2s;
+    font-family: inherit;
+    display: flex; align-items: center; gap: 7px;
+  }
+  .nav-tab:hover { color: var(--navy); }
+  .nav-tab.active { color: var(--navy); border-bottom-color: var(--accent); font-weight: 600; }
+  .nav-tab .tab-icon { font-size: 16px; }
+
+  /* ─── MAIN CONTENT ─── */
+  .main { padding: 32px; max-width: 1300px; margin: 0 auto; }
+
+  /* ─── SECTION HEADER ─── */
+  .section-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; }
+  .section-title { font-size: 24px; font-weight: 700; color: var(--navy); }
+  .section-sub { font-size: 14px; color: var(--text-light); margin-top: 3px; }
+
+  /* ─── CATEGORY FILTER ─── */
+  .category-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+  .cat-btn {
+    padding: 7px 16px; border-radius: 20px;
+    border: 1.5px solid var(--border);
+    font-size: 13px; font-weight: 500;
+    background: var(--white); color: var(--text-light);
+    cursor: pointer; transition: all 0.15s; font-family: inherit;
+  }
+  .cat-btn:hover, .cat-btn.active { background: var(--navy); color: white; border-color: var(--navy); }
+
+  /* ─── PRODUCT GRID ─── */
+  .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+  .product-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeUp 0.35s ease both;
+  }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 32px rgba(15,31,61,0.14); }
+  .product-img {
+    background: #f0f2f5;
+    height: 200px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-img img { width: 100%; height: 100%; object-fit: cover; }
+  .product-category-tag {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--navy); color: white;
+    font-size: 11px; padding: 3px 9px; border-radius: 20px;
+    font-weight: 600;
+  }
+  .product-info { padding: 16px; }
+  .product-sku { font-size: 11px; color: var(--text-light); font-weight: 600; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .product-name { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .product-price-row { display: flex; align-items: center; justify-content: space-between; }
+  .product-from-price { font-size: 13px; color: var(--text-light); }
+  .product-from-price strong { color: var(--accent-dark); font-size: 15px; }
+  .product-moq { font-size: 11px; background: var(--light); padding: 3px 8px; border-radius: 5px; color: var(--text-light); }
+
+  /* ─── PRODUCT MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(10,20,40,0.55);
+    backdrop-filter: blur(4px);
+    z-index: 200; display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--white);
+    border-radius: 18px;
+    width: 780px; max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease both;
+  }
+  @keyframes slideUp { from { transform: translateY(30px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+  .modal-header {
+    padding: 24px 28px 0;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .modal-close {
+    width: 34px; height: 34px;
+    border-radius: 8px; border: 1.5px solid var(--border);
+    background: var(--white); font-size: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; color: var(--text-light);
+    flex-shrink: 0;
+  }
+  .modal-close:hover { background: var(--light); }
+  .modal-body { padding: 20px 28px 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 600px) { .modal-body { grid-template-columns: 1fr; } }
+  .modal-img {
+    background: #f0f2f5; border-radius: 12px;
+    height: 260px; display: flex; align-items: center; justify-content: center;
+    font-size: 80px; overflow: hidden;
+  }
+  .modal-img img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+  .modal-sku { font-size: 12px; font-weight: 700; color: var(--text-light); letter-spacing: 0.6px; margin-bottom: 6px; }
+  .modal-name { font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 14px; line-height: 1.25; }
+  .modal-specs { list-style: none; margin-bottom: 16px; }
+  .modal-specs li { font-size: 13px; color: var(--text); padding: 5px 0; border-bottom: 1px solid var(--border); display: flex; gap: 8px; }
+  .modal-specs li::before { content: '✓'; color: var(--success); font-weight: 700; flex-shrink: 0; }
+  .price-table-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .price-table { width: 100%; border-collapse: collapse; border-radius: 8px; overflow: hidden; font-size: 13px; margin-bottom: 14px; }
+  .price-table th { background: var(--navy); color: white; padding: 8px 12px; text-align: center; font-weight: 600; }
+  .price-table td { padding: 8px 12px; text-align: center; border-bottom: 1px solid var(--border); }
+  .price-table tr:last-child td { border: none; }
+  .price-table tr:nth-child(even) td { background: #f8f9fb; }
+  .price-note { font-size: 12px; color: var(--text-light); margin-bottom: 4px; }
+  .price-note strong { color: var(--text); }
+  .colors-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0 16px; }
+  .color-dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.15s; }
+  .color-dot:hover { transform: scale(1.2); }
+  .btn-inquiry {
+    width: 100%; padding: 14px;
+    background: var(--navy);
+    color: white; border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer; transition: background 0.2s; font-family: inherit;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-inquiry:hover { background: var(--navy-mid); }
+
+  /* ─── INQUIRY FORM MODAL ─── */
+  .inquiry-modal {
+    background: var(--white);
+    border-radius: 18px;
+    width: 520px; max-width: 100%;
+    padding: 32px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+    animation: slideUp 0.3s ease both;
+  }
+  .inquiry-title { font-size: 20px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .inquiry-sub { font-size: 13px; color: var(--text-light); margin-bottom: 22px; }
+  .inquiry-product-info {
+    background: var(--light); border-radius: 10px;
+    padding: 12px 16px; margin-bottom: 22px;
+    font-size: 14px; font-weight: 600; color: var(--navy);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-field { margin-bottom: 16px; }
+  .form-field label { display: block; font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 5px; letter-spacing: 0.3px; }
+  .form-field input, .form-field textarea, .form-field select {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    font-size: 14px; font-family: inherit; outline: none;
+    color: var(--text); transition: border 0.2s; background: white;
+  }
+  .form-field input:focus, .form-field textarea:focus, .form-field select:focus { border-color: var(--navy); }
+  .form-field textarea { resize: vertical; min-height: 80px; }
+  .btn-row { display: flex; gap: 10px; margin-top: 4px; }
+  .btn-primary {
+    flex: 1; padding: 12px;
+    background: var(--navy); color: white;
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--navy-mid); }
+  .btn-secondary {
+    padding: 12px 20px;
+    background: var(--light); color: var(--text);
+    border: none; border-radius: 8px;
+    font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit;
+  }
+  .success-msg {
+    text-align: center; padding: 24px 0;
+  }
+  .success-icon { font-size: 48px; margin-bottom: 12px; }
+  .success-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+  .success-text { font-size: 14px; color: var(--text-light); }
+
+  /* ─── ADMIN PANEL ─── */
+  .admin-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  @media (max-width: 900px) { .admin-layout { grid-template-columns: 1fr; } }
+  .admin-card { background: var(--white); border-radius: var(--radius); box-shadow: var(--card-shadow); padding: 28px; }
+  .admin-card-title { font-size: 17px; font-weight: 700; color: var(--navy); margin-bottom: 20px; display: flex; align-items: center; gap: 8px; }
+  .product-list-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 0;
+    border-bottom: 1px solid var(--border); animation: fadeUp 0.3s ease both;
+  }
+  .product-list-item:last-child { border: none; }
+  .product-list-thumb {
+    width: 48px; height: 48px; border-radius: 8px;
+    background: var(--light); flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+    overflow: hidden;
+  }
+  .product-list-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .product-list-info { flex: 1; min-width: 0; }
+  .product-list-name { font-size: 14px; font-weight: 600; color: var(--navy); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .product-list-meta { font-size: 12px; color: var(--text-light); }
+  .product-list-actions { display: flex; gap: 6px; }
+  .btn-icon {
+    width: 30px; height: 30px; border-radius: 7px;
+    border: 1.5px solid var(--border);
+    background: white; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .btn-icon:hover { border-color: var(--navy); background: var(--light); }
+  .btn-icon.danger:hover { border-color: var(--danger); background: #fef2f2; }
+  /* Add product form */
+  .add-form .form-field label { font-size: 12px; }
+  .price-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .price-grid-label { grid-column: 1 / -1; font-size: 12px; font-weight: 600; color: var(--navy); }
+  .color-adder { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 6px; }
+  .color-pill {
+    display: flex; align-items: center; gap: 4px;
+    background: var(--light); border-radius: 20px;
+    padding: 3px 10px; font-size: 12px;
+  }
+  .color-pill button { background: none; border: none; cursor: pointer; color: var(--text-light); font-size: 14px; padding: 0; line-height: 1; }
+  .btn-add-color {
+    background: var(--light); border: 1.5px dashed var(--border);
+    border-radius: 20px; padding: 4px 12px;
+    font-size: 12px; cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .btn-add-color:hover { border-color: var(--navy); }
+  .btn-submit-product {
+    width: 100%; padding: 13px;
+    background: var(--accent); color: var(--navy);
+    border: none; border-radius: 8px;
+    font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit;
+    transition: background 0.2s; margin-top: 6px;
+  }
+  .btn-submit-product:hover { background: var(--accent-dark); }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+  .empty-state .empty-icon { font-size: 40px; margin-bottom: 10px; }
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card {
+    background: var(--white); border-radius: var(--radius); padding: 20px 22px;
+    box-shadow: var(--card-shadow);
+  }
+  .stat-value { font-size: 28px; font-weight: 700; color: var(--navy); }
+  .stat-label { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ─── SEARCH ─── */
+  .search-bar {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--white); border: 1.5px solid var(--border);
+    border-radius: 10px; padding: 10px 16px;
+    margin-bottom: 20px; box-shadow: var(--card-shadow);
+  }
+  .search-bar input {
+    border: none; outline: none; font-size: 14px; font-family: inherit;
+    flex: 1; color: var(--text); background: transparent;
+  }
+  .search-bar span { color: var(--text-light); font-size: 18px; }
+
+  /* ─── CATEGORY EMOJI MAP ─── */
+  .emoji-placeholder { font-size: 56px; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 30px; right: 30px;
+    background: var(--navy); color: white;
+    padding: 14px 20px; border-radius: 10px;
+    font-size: 14px; font-weight: 500;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+    z-index: 999; display: none;
+    animation: slideInRight 0.3s ease both;
+    max-width: 320px;
+  }
+  @keyframes slideInRight { from { transform: translateX(60px); opacity:0 } to { transform: translateX(0); opacity:1 } }
+  .toast.show { display: block; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    .main { padding: 16px; }
+    .topbar { padding: 0 16px; }
+    .nav-tabs { padding: 0 16px; overflow-x: auto; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* ─── USER MANAGEMENT ─── */
+  .user-table { width: 100%; border-collapse: collapse; }
+  .user-table th { background: var(--light); padding: 10px 14px; font-size: 12px; font-weight: 700; color: var(--text-light); text-align: left; letter-spacing: 0.4px; }
+  .user-table td { padding: 12px 14px; font-size: 14px; border-bottom: 1px solid var(--border); }
+  .user-table tr:last-child td { border: none; }
+  .badge {
+    display: inline-block; padding: 3px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.3px;
+  }
+  .badge-admin { background: #fef3c7; color: #92400e; }
+  .badge-dealer { background: #dbeafe; color: #1e40af; }
+  .badge-active { background: #dcfce7; color: #166534; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-mark">E</div>
+      <div class="login-logo-text">event<span>profil</span>.no</div>
+    </div>
+    <div class="login-title">Forhandlerportal</div>
+    <div class="login-sub">Logg inn for å se priser og produkter</div>
+    <div class="form-group">
+      <label>E-postadresse</label>
+      <input type="email" id="login-email" placeholder="forhandler@firma.no" value="forhandler@test.no">
+    </div>
+    <div class="form-group">
+      <label>Passord</label>
+      <input type="password" id="login-pass" placeholder="••••••••" value="1234">
+      <div class="login-hint">Demo: forhandler@test.no / 1234 &nbsp;|&nbsp; admin@test.no / admin</div>
+    </div>
+    <button class="btn-login" onclick="doLogin()">Logg inn →</button>
+    <div class="login-error" id="login-error">Feil e-post eller passord. Prøv igjen.</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="topbar-logo-mark">E</div>
+      <div class="topbar-name">eventprofil.no</div>
+      <div class="topbar-badge" id="user-role-badge">Forhandler</div>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-user" id="topbar-user">Logget inn som: –</div>
+      <button class="btn-logout" onclick="doLogout()">Logg ut</button>
+    </div>
+  </div>
+
+  <!-- NAV TABS -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showTab(&#39;catalog&#39;)" id="tab-catalog">
+      <span class="tab-icon">📦</span> Produktkatalog
+    </button>
+    <button class="nav-tab" onclick="showTab(&#39;admin&#39;)" id="tab-admin" style="display:none">
+      <span class="tab-icon">⚙️</span> Admin
+    </button>
+  </div>
+
+  <!-- CATALOG TAB -->
+  <div id="content-catalog" class="tab-content active">
+    <div class="main">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-products">0</div>
+          <div class="stat-label">Produkter tilgjengelig</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-cats">0</div>
+          <div class="stat-label">Kategorier</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-from">–</div>
+          <div class="stat-label">Priser fra (USD)</div>
+        </div>
+      </div>
+      <div class="search-bar">
+        <span>🔍</span>
+        <input type="text" id="search-input" placeholder="Søk etter produkt eller varenummer..." oninput="renderProducts()">
+      </div>
+      <div class="category-bar" id="category-bar"></div>
+      <div class="product-grid" id="product-grid"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN TAB -->
+  <div id="content-admin" class="tab-content">
+    <div class="main">
+      <div class="section-header">
+        <div>
+          <div class="section-title">Administrasjon</div>
+          <div class="section-sub">Legg til og administrer produkter og brukere</div>
+        </div>
+      </div>
+      <div class="admin-layout">
+        <!-- ADD PRODUCT FORM -->
+        <div class="admin-card add-form">
+          <div class="admin-card-title">➕ Legg til nytt produkt</div>
+          <div class="form-field">
+            <label>VARENUMMER</label>
+            <input type="text" id="f-sku" placeholder="f.eks. DRA-1969">
+          </div>
+          <div class="form-field">
+            <label>PRODUKTNAVN</label>
+            <input type="text" id="f-name" placeholder="f.eks. Slides Slipper/Voksen">
+          </div>
+          <div class="form-field">
+            <label>KATEGORI</label>
+            <select id="f-cat">
+              <option value="Strand &amp; Sommer">Strand &amp; Sommer</option>
+              <option value="Paraplyer &amp; Regn">Paraplyer &amp; Regn</option>
+              <option value="Kontor &amp; Business">Kontor &amp; Business</option>
+              <option value="Teknologi">Teknologi</option>
+              <option value="Sport &amp; Friluft">Sport &amp; Friluft</option>
+              <option value="Gaver &amp; Profil">Gaver &amp; Profil</option>
+              <option value="Tekstil">Tekstil</option>
+              <option value="Annet">Annet</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label>EMOJI / IKON (til visning uten bilde)</label>
+            <input type="text" id="f-emoji" placeholder="f.eks. 👟" maxlength="4">
+          </div>
+          <div class="form-field">
+            <label>SPESIFIKASJONER (én per linje)</label>
+            <textarea id="f-specs" placeholder="Høy kvalitet PVC material
+Slitesterk såle
+Tilgjengelig i 10 farger"></textarea>
+          </div>
+          <div class="form-field">
+            <label>PRISMATRISE</label>
+            <div class="price-grid">
+              <div style="font-size:12px;color:var(--text-light);grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <span style="font-weight:700;color:var(--navy)">Antall</span>
+                <span style="font-weight:700;color:var(--navy)">Pris (USD/stk)</span>
+              </div>
+              <input type="number" id="p-qty1" placeholder="Ant. (f.eks. 250)">
+              <input type="number" id="p-price1" placeholder="Pris (f.eks. 10.20)" step="0.01">
+              <input type="number" id="p-qty2" placeholder="Ant. (f.eks. 500)">
+              <input type="number" id="p-price2" placeholder="Pris (f.eks. 8.50)" step="0.01">
+              <input type="number" id="p-qty3" placeholder="Ant. (f.eks. 1000)">
+              <input type="number" id="p-price3" placeholder="Pris (f.eks. 7.35)" step="0.01">
+              <input type="number" id="p-qty4" placeholder="Ant. (valgfritt)">
+              <input type="number" id="p-price4" placeholder="Pris (valgfritt)" step="0.01">
+            </div>
+          </div>
+          <div class="form-field">
+            <label>MINIMUMBESTILLING (stk)</label>
+            <input type="number" id="f-moq" placeholder="f.eks. 250">
+          </div>
+          <div class="form-field">
+            <label>PRODUKSJONSTID</label>
+            <input type="text" id="f-lead" placeholder="f.eks. 18 dager">
+          </div>
+          <div class="form-field">
+            <label>FARGER</label>
+            <div class="color-adder" id="color-adder">
+              <div id="color-pills"></div>
+              <button class="btn-add-color" onclick="addColor()">+ Legg til farge</button>
+            </div>
+          </div>
+          <button class="btn-submit-product" onclick="addProduct()">Legg til produkt →</button>
+        </div>
+
+        <!-- PRODUCT LIST -->
+        <div>
+          <div class="admin-card">
+            <div class="admin-card-title">📋 Alle produkter (<span id="admin-product-count">0</span>)</div>
+            <div id="admin-product-list"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="product-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div></div>
+      <button class="modal-close" onclick="closeModal(&#39;product-modal&#39;)">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body-content"></div>
+  </div>
+</div>
+
+<!-- INQUIRY MODAL -->
+<div class="modal-overlay" id="inquiry-modal">
+  <div class="inquiry-modal" id="inquiry-modal-inner"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────
+const USERS = [
+  { email: 'forhandler@test.no', pass: '1234', name: 'Test Forhandler AS', role: 'dealer' },
+  { email: 'admin@test.no', pass: 'admin', name: 'Admin Bruker', role: 'admin' },
+];
+
+let currentUser = null;
+let selectedCategory = 'Alle';
+let currentProduct = null;
+let productColors = [];
+
+let products = [
+  {
+    id: 1, sku: 'DRA-1969', name: 'Slides Slipper/Voksen', category: 'Strand & Sommer',
+    emoji: '👟', moq: 250, lead: '18 dager',
+    specs: ['Høy kvalitet PVC material','Slitesterk såle – vanskelig å skade','Hælstøtte og sklisikker bunn','10 standardfarger tilgjengelig','Egendefinert farge fra 1000 par'],
+    prices: [{qty:250,price:10.20},{qty:500,price:8.50},{qty:1000,price:7.35},{qty:2500,price:6.55},{qty:5000,price:6.10}],
+    colors: ['White','Black','Gray','Red','Orange','Light Blue','Blue','Yellow','Green','Pink'],
+    colorHex: ['#ffffff','#1a1a1a','#9ca3af','#ef4444','#f97316','#93c5fd','#3b82f6','#eab308','#22c55e','#f9a8d4']
+  },
+  {
+    id: 2, sku: 'DRA-1970', name: 'Slides Slipper/Barn', category: 'Strand & Sommer',
+    emoji: '🩴', moq: 250, lead: '18 dager',
+    specs: ['PVC material i høy kvalitet','Sklisikker bunn','EU str. 25–35','8 standardfarger tilgjengelig'],
+    prices: [{qty:250,price:9.50},{qty:500,price:7.80},{qty:1000,price:6.90},{qty:2500,price:6.20}],
+    colors: ['White','Black','Red','Blue','Yellow','Green','Orange','Pink'],
+    colorHex: ['#ffffff','#1a1a1a','#ef4444','#3b82f6','#eab308','#22c55e','#f97316','#f9a8d4']
+  },
+  {
+    id: 3, sku: 'DRA-1968', name: 'Flip Flops/Barn', category: 'Strand & Sommer',
+    emoji: '🩴', moq: 300, lead: '15 dager',
+    specs: ['EVA såle – lett og komfortabelt','Enkelt å trykke logo på remmen','Tilgjengelig i 8 farger','EU str. 25–35'],
+    prices: [{qty:300,price:5.20},{qty:500,price:4.60},{qty:1000,price:3.90},{qty:2500,price:3.50}],
+    colors: ['White','Black','Blue','Yellow','Red','Green'],
+    colorHex: ['#ffffff','#1a1a1a','#3b82f6','#eab308','#ef4444','#22c55e']
+  },
+  {
+    id: 4, sku: 'UMB-2201', name: 'Automatisk Paraply med Logo', category: 'Paraplyer & Regn',
+    emoji: '☂️', moq: 100, lead: '21 dager',
+    specs: ['Automatisk åpning og lukking','210T polyester stoff','Glassfiberstilker – vindsterk','Trykkflate: 95 × 16 cm per panel'],
+    prices: [{qty:100,price:14.80},{qty:250,price:12.50},{qty:500,price:10.90},{qty:1000,price:9.60}],
+    colors: ['Black','Navy','Red','Blue','Green'],
+    colorHex: ['#1a1a1a','#0f1f3d','#ef4444','#3b82f6','#22c55e']
+  },
+  {
+    id: 5, sku: 'TEC-3301', name: 'USB-C Hurtiglader 3-i-1', category: 'Teknologi',
+    emoji: '🔌', moq: 100, lead: '14 dager',
+    specs: ['USB-C, Micro-USB og Lightning','20W hurtiglading','Inngravert logo tilgjengelig','Bærekraftig hvetestrå materiale'],
+    prices: [{qty:100,price:8.90},{qty:250,price:7.60},{qty:500,price:6.80},{qty:1000,price:5.90}],
+    colors: ['Black','White','Natural'],
+    colorHex: ['#1a1a1a','#ffffff','#d4b896']
+  },
+  {
+    id: 6, sku: 'SPO-4401', name: 'Drikkeflaske 750ml', category: 'Sport & Friluft',
+    emoji: '🍶', moq: 50, lead: '12 dager',
+    specs: ['BPA-fritt Tritan plast','750 ml volum','Lekkasjefri lokk','Trykt logo – full farge'],
+    prices: [{qty:50,price:11.50},{qty:100,price:9.80},{qty:250,price:8.20},{qty:500,price:7.10}],
+    colors: ['Black','Blue','Red','Green','Clear'],
+    colorHex: ['#1a1a1a','#3b82f6','#ef4444','#22c55e','#f0f0f0']
+  }
+];
+
+// ─── AUTH ─────────────────────────────────────────────────────────
+function doLogin() {
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const pass = document.getElementById('login-pass').value;
+  const user = USERS.find(u => u.email === email && u.pass === pass);
+  if (!user) {
+    document.getElementById('login-error').style.display = 'block';
+    return;
+  }
+  currentUser = user;
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('topbar-user').textContent = user.name;
+  document.getElementById('user-role-badge').textContent = user.role === 'admin' ? 'Administrator' : 'Forhandler';
+  if (user.role === 'admin') {
+    document.getElementById('tab-admin').style.display = 'flex';
+  }
+  renderAll();
+}
+
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('login-error').style.display = 'none';
+}
+
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// ─── TABS ─────────────────────────────────────────────────────────
+function showTab(tab) {
+  ['catalog','admin'].forEach(t => {
+    document.getElementById('content-' + t).classList.toggle('active', t === tab);
+    document.getElementById('tab-' + t).classList.toggle('active', t === tab);
+  });
+  if (tab === 'admin') renderAdminList();
+}
+
+// ─── RENDER ────────────────────────────────────────────────────────
+function renderAll() {
+  renderCategoryBar();
+  renderProducts();
+  renderStats();
+  renderAdminList();
+}
+
+function getCategories() {
+  const cats = [...new Set(products.map(p => p.category))];
+  return cats;
+}
+
+function renderCategoryBar() {
+  const bar = document.getElementById('category-bar');
+  const cats = getCategories();
+  bar.innerHTML = `<button class="cat-btn ${selectedCategory==='Alle'?'active':''}" onclick="filterCat('Alle')">Alle (${products.length})</button>`;
+  cats.forEach(c => {
+    const count = products.filter(p => p.category === c).length;
+    bar.innerHTML += `<button class="cat-btn ${selectedCategory===c?'active':''}" onclick="filterCat('${c}')">${c} (${count})</button>`;
+  });
+}
+
+function filterCat(cat) {
+  selectedCategory = cat;
+  renderCategoryBar();
+  renderProducts();
+}
+
+function renderProducts() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const grid = document.getElementById('product-grid');
+  let filtered = products.filter(p => {
+    const matchCat = selectedCategory === 'Alle' || p.category === selectedCategory;
+    const matchQ = !q || p.name.toLowerCase().includes(q) || p.sku.toLowerCase().includes(q);
+    return matchCat && matchQ;
+  });
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🔍</div><div>Ingen produkter funnet</div></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(p => `
+    <div class="product-card" onclick="openProduct(${p.id})">
+      <div class="product-img">
+        <span class="emoji-placeholder">${p.emoji || '📦'}</span>
+        <span class="product-category-tag">${p.category}</span>
+      </div>
+      <div class="product-info">
+        <div class="product-sku">${p.sku}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-price-row">
+          <div class="product-from-price">Fra <strong>$${Math.min(...p.prices.map(x=>x.price)).toFixed(2)}</strong>/stk</div>
+          <div class="product-moq">Min. ${p.moq} stk</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderStats() {
+  document.getElementById('stat-products').textContent = products.length;
+  document.getElementById('stat-cats').textContent = getCategories().length;
+  if (products.length > 0) {
+    const min = Math.min(...products.flatMap(p => p.prices.map(x => x.price)));
+    document.getElementById('stat-from').textContent = '$' + min.toFixed(2);
+  }
+}
+
+// ─── PRODUCT MODAL ────────────────────────────────────────────────
+function openProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  currentProduct = p;
+  const colorDots = p.colorHex.map((hex, i) => `<div class="color-dot" style="background:${hex}" title="${p.colors[i]}"></div>`).join('');
+  const rows = p.prices.map(r => `<tr><td><strong>${r.qty}</strong></td><td>$${r.price.toFixed(2)}</td></tr>`).join('');
+  const specs = p.specs.map(s => `<li>${s}</li>`).join('');
+  document.getElementById('modal-body-content').innerHTML = `
+    <div>
+      <div class="modal-img"><span class="emoji-placeholder" style="font-size:90px">${p.emoji}</span></div>
+    </div>
+    <div>
+      <div class="modal-sku">${p.sku}</div>
+      <div class="modal-name">${p.name}</div>
+      <ul class="modal-specs">${specs}</ul>
+      <div class="price-table-title">📊 Prismatrise (USD per stk, DDU sjøfrakt)</div>
+      <table class="price-table">
+        <thead><tr><th>Antall</th><th>Pris/stk</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+      <div class="price-note">⏱ Produksjonstid: <strong>${p.lead}</strong></div>
+      <div class="price-note">📦 Min. bestilling: <strong>${p.moq} stk</strong></div>
+      <div style="margin-top:12px;font-size:12px;font-weight:700;color:var(--text-light)">TILGJENGELIGE FARGER</div>
+      <div class="colors-row">${colorDots}</div>
+      <button class="btn-inquiry" onclick="openInquiry(${p.id})">📩 Send forespørsel</button>
+    </div>
+  `;
+  document.getElementById('product-modal').classList.add('open');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+document.getElementById('product-modal').addEventListener('click', function(e) { if (e.target === this) closeModal('product-modal'); });
+document.getElementById('inquiry-modal').addEventListener('click', function(e) { if (e.target === this) closeModal('inquiry-modal'); });
+
+// ─── INQUIRY ──────────────────────────────────────────────────────
+function openInquiry(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  closeModal('product-modal');
+  document.getElementById('inquiry-modal-inner').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+      <div>
+        <div class="inquiry-title">📩 Send forespørsel</div>
+        <div class="inquiry-sub">Fyll ut skjemaet så tar vi kontakt</div>
+      </div>
+      <button class="modal-close" onclick="closeModal('inquiry-modal')">✕</button>
+    </div>
+    <div class="inquiry-product-info">${p.emoji} ${p.sku} – ${p.name}</div>
+    <div class="form-row">
+      <div class="form-field"><label>FIRMANAVN</label><input type="text" id="iq-company" placeholder="Firma AS" value="${currentUser?.name || ''}"></div>
+      <div class="form-field"><label>KONTAKTPERSON</label><input type="text" id="iq-contact" placeholder="Navn"></div>
+    </div>
+    <div class="form-field"><label>E-POST</label><input type="email" id="iq-email" placeholder="post@firma.no" value="${currentUser?.email || ''}"></div>
+    <div class="form-row">
+      <div class="form-field"><label>ØNSKET ANTALL</label><input type="number" id="iq-qty" placeholder="f.eks. 500" min="${p.moq}"></div>
+      <div class="form-field"><label>ØNSKET FARGE</label>
+        <select id="iq-color">${p.colors.map(c=>`<option>${c}</option>`).join('')}</select>
+      </div>
+    </div>
+    <div class="form-field"><label>KOMMENTAR</label><textarea id="iq-msg" placeholder="Logo, leveringsdato, spesielle ønsker..."></textarea></div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="closeModal('inquiry-modal')">Avbryt</button>
+      <button class="btn-primary" onclick="submitInquiry('${p.name}')">Send forespørsel →</button>
+    </div>
+  `;
+  document.getElementById('inquiry-modal').classList.add('open');
+}
+
+function submitInquiry(productName) {
+  const company = document.getElementById('iq-company').value;
+  const email = document.getElementById('iq-email').value;
+  if (!company || !email) { showToast('⚠️ Fyll ut firmanavn og e-post'); return; }
+  document.getElementById('inquiry-modal-inner').innerHTML = `
+    <div class="success-msg">
+      <div class="success-icon">✅</div>
+      <div class="success-title">Forespørsel sendt!</div>
+      <div class="success-text">Vi har mottatt din forespørsel for <strong>${productName}</strong> og tar kontakt innen 1 virkedag.</div>
+      <button class="btn-primary" style="margin-top:20px;max-width:200px" onclick="closeModal('inquiry-modal')">Lukk</button>
+    </div>
+  `;
+}
+
+// ─── ADMIN ────────────────────────────────────────────────────────
+function renderAdminList() {
+  const list = document.getElementById('admin-product-list');
+  document.getElementById('admin-product-count').textContent = products.length;
+  if (products.length === 0) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-icon">📦</div><div>Ingen produkter ennå.<br>Legg til ditt første produkt!</div></div>`;
+    return;
+  }
+  list.innerHTML = products.map(p => `
+    <div class="product-list-item">
+      <div class="product-list-thumb"><span style="font-size:22px">${p.emoji}</span></div>
+      <div class="product-list-info">
+        <div class="product-list-name">${p.name}</div>
+        <div class="product-list-meta">${p.sku} · ${p.category} · Fra $${Math.min(...p.prices.map(x=>x.price)).toFixed(2)}</div>
+      </div>
+      <div class="product-list-actions">
+        <button class="btn-icon" onclick="openProduct(${p.id})" title="Vis">👁</button>
+        <button class="btn-icon danger" onclick="deleteProduct(${p.id})" title="Slett">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addProduct() {
+  const sku = document.getElementById('f-sku').value.trim();
+  const name = document.getElementById('f-name').value.trim();
+  const cat = document.getElementById('f-cat').value;
+  const emoji = document.getElementById('f-emoji').value.trim() || '📦';
+  const specsRaw = document.getElementById('f-specs').value.trim();
+  const moq = parseInt(document.getElementById('f-moq').value) || 100;
+  const lead = document.getElementById('f-lead').value.trim() || '14 dager';
+  if (!sku || !name) { showToast('⚠️ Fyll ut varenummer og produktnavn'); return; }
+  const prices = [];
+  for (let i = 1; i <= 4; i++) {
+    const qty = parseInt(document.getElementById(`p-qty${i}`).value);
+    const price = parseFloat(document.getElementById(`p-price${i}`).value);
+    if (qty && price) prices.push({qty, price});
+  }
+  if (prices.length === 0) { showToast('⚠️ Legg til minst én pris'); return; }
+  const specs = specsRaw ? specsRaw.split('\n').filter(s=>s.trim()) : [];
+  const newProduct = {
+    id: Date.now(), sku, name, category: cat, emoji, moq, lead, specs, prices,
+    colors: productColors.map(c=>c.name),
+    colorHex: productColors.map(c=>c.hex)
+  };
+  products.push(newProduct);
+  // Reset form
+  ['f-sku','f-name','f-emoji','f-specs','f-moq','f-lead'].forEach(id => document.getElementById(id).value = '');
+  ['p-qty1','p-price1','p-qty2','p-price2','p-qty3','p-price3','p-qty4','p-price4'].forEach(id => document.getElementById(id).value = '');
+  productColors = [];
+  document.getElementById('color-pills').innerHTML = '';
+  renderAdminList();
+  renderAll();
+  showToast('✅ ' + name + ' ble lagt til!');
+}
+
+function deleteProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Slett "${p.name}"?`)) return;
+  products = products.filter(x => x.id !== id);
+  renderAdminList();
+  renderAll();
+  showToast('🗑 Produkt slettet');
+}
+
+// ─── COLORS ─────────────────────────────────────────────────────
+function addColor() {
+  const name = prompt('Fargenavn (f.eks. Blå):');
+  if (!name) return;
+  const hex = prompt('Fargekode (f.eks. #3b82f6):') || '#999999';
+  productColors.push({name, hex});
+  renderColorPills();
+}
+function renderColorPills() {
+  document.getElementById('color-pills').innerHTML = productColors.map((c, i) => `
+    <div class="color-pill">
+      <div style="width:12px;height:12px;border-radius:50%;background:${c.hex};border:1px solid rgba(0,0,0,0.15)"></div>
+      ${c.name}
+      <button onclick="removeColor(${i})">✕</button>
+    </div>
+  `).join('');
+}
+function removeColor(i) {
+  productColors.splice(i, 1);
+  renderColorPills();
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+
+
+</body></html>
