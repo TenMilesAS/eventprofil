@@ -629,4 +629,21 @@ function addColor() {
 }
 function renderColorPills() {
   document.getElementById('color-pills').innerHTML = productColors.map((c,i) =>
-    `<div class="color-pill"><div style="width:12px;height:12px;border-radius:50%;background:${c.hex};border:1px solid rgba(0,0,0,0.15)"></div>${c.name}<button onclic
+    `<div class="color-pill"><div style="width:12px;height:12px;border-radius:50%;background:${c.hex};border:1px solid rgba(0,0,0,0.15)"></div>${c.name}<button onclick="removeColor(${i})">✕</button></div>`
+  ).join('');
+}
+function removeColor(i) {
+  productColors.splice(i, 1);
+  renderColorPills();
+}
+
+// TOAST
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
