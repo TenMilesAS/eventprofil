@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produkt | Eventprofil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260911" />
+  <link rel="stylesheet" href="product-page.css?v=20260911" />
+  <link rel="stylesheet" href="product-details.css?v=20260911" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="top-strip">
+      <div class="shell top-strip-inner">
+        <span>☎ +47 22 00 00 00</span>
+        <a href="mailto:hei@eventprofil.no">✉ hei@eventprofil.no</a>
+        <span class="top-strip-spacer"></span>
+        <a href="index.html#products">Produkter</a>
+        <a href="index.html#new">Nyheter</a>
+        <a href="index.html#admin">Forhandlerinnlogging</a>
+        <a href="index.html#about">Om oss</a>
+        <a href="index.html#contact">Kontakt</a>
+      </div>
+    </div>
+    <div class="logo-search-row">
+      <div class="shell logo-search-inner">
+        <a href="index.html" class="brand" aria-label="Eventprofil hjem"><span class="brand-mark">e</span><span>event<span>profil</span></span></a>
+        <div class="header-search">
+          <input id="quickSearch" type="search" placeholder="Søk..." autocomplete="off">
+          <button id="quickSearchButton" type="button" aria-label="Søk">⌕</button>
+          <div class="quick-search-results" id="quickSearchResults"></div>
+        </div>
+      </div>
+    </div>
+    <section class="category-bar"><div class="shell" id="categoryNav"></div></section>
+  </header>
+  <main class="product-page shell"><div id="productPage"></div></main>
+  <footer><div class="shell copyright">© 2026 Eventprofil. Alle rettigheter reservert.</div></footer>
+  <script src="supabase-config.js?v=20260911"></script>
+  <script src="product.js?v=20260911"></script>
+</body>
+</html>

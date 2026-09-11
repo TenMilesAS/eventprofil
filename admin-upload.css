@@ -1,0 +1,22 @@
+.upload-preview {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid var(--line);
+  padding: 11px;
+  margin-bottom: 15px;
+  background: #fff;
+}
+
+.upload-preview img {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+  background: #f0eee8;
+}
+
+.upload-preview p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted);
+}
